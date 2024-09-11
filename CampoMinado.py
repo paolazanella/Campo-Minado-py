@@ -69,7 +69,7 @@ def jogo(mapa_bombas):
             mostrar_resultado(False)  # mostra resuldado de derroda
             return False  # retorna false indicando que o jogo termino
         else:
-            revelado[linha, coluna]: True  # revelaa a posicao
+            revelado[linha, coluna] = True  # revelaa a posicao
             # se nao tive bombas nas vizinhaca
             if bombas_adjacentes[linha, coluna] == 0:
                 # revela as posicoes vizinhas
