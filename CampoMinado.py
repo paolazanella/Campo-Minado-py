@@ -1,7 +1,7 @@
 import numpy as np  # Importa a biblioteca numpy para manipulação de arrays
 
 
-def carrefar_mapa(filename):
+def carregar_mapa(filename):
     """Carrega o mapa a partir de um arquivo de texto."""
     with open(filename, 'r') as file:  # abre o arquivo em mode de leitura
         linhas = file.readlines()  # le todos as linhnas do arquivo
@@ -87,7 +87,74 @@ def jogo(mapa_bombas):
 
 def calcular_bombas(mapa_bombas):
     """Calcula o número de bombas adjacentes para cada célula."""
+    altura, largura = mapa_bombas.shape  # Obtém a altura e a largura do mapa
+    # Inicializa a matriz de bombas adjacentes com zeros
+    bombas_adjacentes = np.zeros((altura, largura), dtype=int)
+
+    # Percorre cada célula do mapa
+    for i in range(altura):
+        for j in range(largura):
+            if mapa_bombas[i, j] == 1:  # Se a célula contém uma bomba
+                # Verifica todas as células vizinhas (incluindo diagonais)
+                for di in [-1, 0, 1]:
+                    for dj in [-1, 0, 1]:
+                        # Verifica se a célula vizinha está dentro dos limites do mapa e não é a célula atual
+                        if 0 <= i + di < altura and 0 <= j + dj < largura and not (di == 0 and dj == 0):
+                            # Incrementa o contador de bombas adjacentes na célula vizinha
+                            bombas_adjacentes[i + di, j + dj] += 1
+
+    return bombas_adjacentes  # Retorna a matriz com o número de bombas adjacentes
 
 
 def mostrar_resultado(vitoria):
     """Mostra o resultado final do jogo."""
+    if vitoria:
+        print("Você ganhou!")  # Mensagem de vitória
+    else:
+        print("Você perdeu!")  # Mensagem de derrota
+
+    while True:
+        # Solicita a escolha do usuário
+        opcao = input(
+            "Digite 'm' para voltar ao menu ou 's' para sair: ").lower()
+        if opcao == 'm':
+            return  # Retorna para o menu
+        elif opcao == 's':
+            print("Saindo do jogo. Até logo!")  # Mensagem de saída
+            exit()  # Encerra o programa
+        else:
+            # Mensagem de erro para opção inválida
+            print("Opção inválida! Tente novamente.")
+
+
+def menu():
+    """Exibe o menu principal e gerencia a seleção de opções do jogador."""
+    while True:  # Mantém o menu em loop até o jogador decidir sair
+        print("\nBem-vindo ao Campo Minado!")  # Mensagem de boas-vindas
+        print("Escolha uma opção:")
+        print("1. Jogar Fácil")
+        print("2. Jogar Médio")
+        print("3. Jogar Difícil")
+        print("5. Sair")
+
+        # Solicita a escolha do usuário
+        escolha = input("Digite o número da opção: ")
+        if escolha == '1':
+            mapa = carregar_mapa('mapa_facil.txt')  # Carrega o mapa fácil
+            jogo(mapa)  # Inicia o jogo com o mapa carregado
+        elif escolha == '2':
+            mapa = carregar_mapa('mapa_medio.txt')  # Carrega o mapa médio
+            jogo(mapa)  # Inicia o jogo com o mapa carregado
+        elif escolha == '3':
+            mapa = carregar_mapa('mapa_dificil.txt')  # Carrega o mapa difícil
+            jogo(mapa)  # Inicia o jogo com o mapa carregado
+        elif escolha == '5':
+            print("Saindo do jogo. Até logo!")  # Mensagem de saída
+            break  # Sai do loop do menu
+        else:
+            # Mensagem de erro para opção inválida
+            print("Opção inválida! Tente novamente.")
+
+
+if __name__ == "__main__":
+    menu()  # Inicia o menu principal ao executar o script
